@@ -22,6 +22,7 @@ set(MICROPY_SOURCE_EXTMOD
     ${MICROPY_EXTMOD_DIR}/modujson.c
     ${MICROPY_EXTMOD_DIR}/modurandom.c
     ${MICROPY_EXTMOD_DIR}/modure.c
+    ${MICROPY_EXTMOD_DIR}/modursa.c
     ${MICROPY_EXTMOD_DIR}/moduselect.c
     ${MICROPY_EXTMOD_DIR}/modussl_axtls.c
     ${MICROPY_EXTMOD_DIR}/modussl_mbedtls.c
