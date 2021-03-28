@@ -90,17 +90,17 @@ class LetterBox:
         pub_key = bytearray(self.__namespace.get_i32("pub_key_len"))
         self.__namespace.get_blob("pub_key", pub_key)
         pub_key_b64 = b2a_base64(pub_key).strip().decode('utf-8')
-        serial_number = None
+        
         while status_code != 200: # will keep generating new serials until one works
-            serial_number = hexlify(attempt_serial).strip().decode('utf-8').upper()
-            r = self.__requester.request('POST','https://letterbox.mayursaxena.com/.netlify/functions/onboard', json={'id': serial_number, 'pk': pub_key_b64})
+            self.serial_number = hexlify(attempt_serial).strip().decode('utf-8').upper()
+            r = self.__requester.request('POST','https://letterbox.mayursaxena.com/.netlify/functions/onboard', json={'id': self.serial_number, 'pk': pub_key_b64})
             status_code = r.status_code
             print('{0}: {1}'.format(r.status_code, r.reason))
             attempt_serial = urandom(6)
             r.close()
-        self.__namespace.set_blob('serial_number', serial_number) # store the serial that worked in NVS
+        self.__namespace.set_blob('serial_number', self.serial_number) # store the serial that worked in NVS
         self.__namespace.commit()
-        print("Device onboarded with serial {0}.".format(serial_number))
+        print("Device onboarded with serial {0}.".format(self.serial_number))
 
     async def poll_async(self):
         while True:
@@ -192,14 +192,14 @@ class LetterBox:
     def bootup(self):
         print('Device has been initialized... Beginning normal bootup.')
         # ensure LetterBox has WiFi, then set the time via NTP
-        self.__wifi_manager.get_connection()
+        self.__wifi_manager.ensure_connection()
         for attempt in range(1,4):
             try:
                 settime()
                 print('Time set.')
                 break
             except:
-                print('Error setting time (attempt #{0}).'.format(attempt)))
+                print('Error setting time (attempt #{0}).'.format(attempt))
 
     def __display_no_letter_text(self):
         # Prompt the user to go register.

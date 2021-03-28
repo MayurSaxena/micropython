@@ -289,6 +289,6 @@ class ConnectedRequester:
     def __init__(self, wifimgr):
         self.__manager = wifimgr
     def request(self, method, url, data=None, json=None, headers={}):
-        self.__manager.get_connection()
+        self.__manager.ensure_connection()
         return requests.request(method.upper(), url, data, json, headers)
 
